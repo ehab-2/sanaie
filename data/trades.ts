@@ -1,0 +1,26 @@
+import { Trade } from "@/types/trade";
+
+export const trades: Trade[] = [
+  { slug: "electrical", label: "Electrical" },
+  { slug: "plumbing", label: "Plumbing" },
+  { slug: "carpentry", label: "Carpentry" },
+  { slug: "building", label: "Building & Construction" },
+  { slug: "masonry", label: "Masonry" },
+  { slug: "tiling", label: "Tiling & Marble" },
+  { slug: "ac-hvac", label: "AC & HVAC" },
+  { slug: "painting", label: "Painting" },
+  { slug: "aluminum", label: "Aluminum & Glass" },
+  { slug: "welding", label: "Welding & Iron" },
+  { slug: "appliance-repair", label: "Appliance Repair" },
+  { slug: "gypsum", label: "Gypsum & Ceilings" },
+  { slug: "waterproofing", label: "Waterproofing" },
+  { slug: "glass", label: "Glass Work" },
+  { slug: "elevator", label: "Elevator Maintenance" },
+  { slug: "satellite", label: "Satellite & Antennas" },
+  { slug: "solar", label: "Solar Energy" },
+  { slug: "landscaping", label: "Landscaping & Gardening" },
+  { slug: "intercom-security", label: "Intercom & Security Systems" },
+  { slug: "upholstery", label: "Furniture Upholstery" },
+  { slug: "cleaning", label: "Cleaning & Pest Control" },
+  { slug: "moving", label: "Moving & Transport" },
+];

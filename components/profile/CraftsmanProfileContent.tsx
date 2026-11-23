@@ -103,7 +103,7 @@ export default function CraftsmanProfileContent({
                   {workImages.slice(0, 4).map((src, index) => (
                     <Link
                       key={`${src}-${index}`}
-                      href={`/craftsmen/${craftsman.id}/work`}
+                      href={`/craftspeople/craftsman/${craftsman.id}/work`}
                       aria-label={`View all work by ${craftsman.name}`}
                       className="group relative aspect-4/3 overflow-hidden rounded-sm bg-background"
                     >
@@ -118,7 +118,7 @@ export default function CraftsmanProfileContent({
                   ))}
                 </div>
                 <Link
-                  href={`/craftsmen/${craftsman.id}/work`}
+                  href={`/craftspeople/craftsman/${craftsman.id}/work`}
                   className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-md border border-border font-mono text-[10px] uppercase tracking-[0.16em] transition-colors hover:bg-foreground hover:text-background"
                 >
                   View all work

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState,} from "react";
 import { useRouter } from "next/navigation";
 import { BriefcaseBusiness, MapPin, Search } from "lucide-react";
 import {
@@ -30,7 +30,7 @@ function SearchBar({
   const [selectedGovernorate, setSelectedGovernorate] =
     useState(initialGovernorate);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const params = new URLSearchParams();

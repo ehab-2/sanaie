@@ -14,7 +14,7 @@ export function CraftsmanCard({ craftsman, index }: Props) {
         <div className="flex items-center gap-3.5">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-foreground font-mono text-xs font-medium uppercase tracking-[0.14em] text-background">
             <Link
-              href={`/craftsmen/${craftsman.id}`}
+              href={`/craftspeople/craftsman/${craftsman.id}`}
               className="transition-colors group-hover:text-primary"
             >
               {craftsman.initials}
@@ -24,7 +24,7 @@ export function CraftsmanCard({ craftsman, index }: Props) {
           <div>
             <h3 className="text-[17px] font-medium leading-tight tracking-[-0.015em] text-foreground">
               <Link
-                href={`/craftsmen/${craftsman.id}`}
+                href={`/craftspeople/craftsman/${craftsman.id}`}
                 className="transition-colors group-hover:text-primary"
               >
                 {craftsman.name}

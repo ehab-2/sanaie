@@ -1,5 +1,4 @@
 import { BadgeCheck, Wrench } from "lucide-react";
-import React from "react";
 
 function Hero() {
   return (
@@ -42,10 +41,6 @@ function Hero() {
             technicians. Real portfolios, verified ratings and a direct line on
             WhatsApp.
           </p>
-        </div>
-
-        <div className="mx-auto w-full max-w-4xl">
-
         </div>
       </div>
     </section>

@@ -3,17 +3,13 @@ import { ArrowLeft } from "lucide-react";
 import type { Craftsman } from "@/types/craftsman";
 import WorkImageGrid from "./WorkImageGrid";
 
-export default function CraftsmanWorkGalleryContent({
-  craftsman,
-}: {
-  craftsman: Craftsman;
-}) {
+export default function CraftsmanWorkGalleryContent({craftsman,}: {craftsman: Craftsman;}) {
   const workImages = craftsman.selectedWork ?? [];
 
   return (
     <main className="mx-auto w-full max-w-360 flex-1 px-5 py-8 md:px-10 md:py-12">
       <Link
-        href={`/craftsmen/${craftsman.id}`}
+        href={`/craftspeople/craftsman/${craftsman.id}`}
         className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground"
       >
         <ArrowLeft size={14} />

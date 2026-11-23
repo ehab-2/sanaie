@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 interface WorkImageGridProps {
@@ -15,18 +15,43 @@ export default function WorkImageGrid({
 }: WorkImageGridProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const historyPushed = useRef(false);
+
+  const open = (src: string) => {
+    if (!historyPushed.current) {
+      window.history.pushState(null, "", window.location.href);
+      historyPushed.current = true;
+    }
+    setSelectedImage(src);
+  };
+
+  const close = useCallback(() => {
+    if (historyPushed.current) {
+      window.history.back();
+    } else {
+      setSelectedImage(null);
+    }
+  }, []);
 
   useEffect(() => {
     const dialog = dialogRef.current;
-    if (!dialog) return;
+    if (!dialog || !selectedImage) return;
 
-    if (selectedImage && !dialog.open) {
-      dialog.showModal();
-      closeButtonRef.current?.focus();
-    } else if (!selectedImage && dialog.open) {
-      dialog.close();
-    }
+    const onPopState = () => {
+      historyPushed.current = false;
+      setSelectedImage(null);
+    };
+
+    dialog.showModal();
+    document.body.style.overflow = "hidden";
+    window.addEventListener("popstate", onPopState);
+
+    // Runs on close AND on unmount/route change/hide
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      document.body.style.overflow = "";
+      if (dialog.open) dialog.close();
+    };
   }, [selectedImage]);
 
   return (
@@ -34,20 +59,20 @@ export default function WorkImageGrid({
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {images.map((src, index) => (
           <button
-            key={`${src}-${index}`}
+            key={src}
             type="button"
-            onClick={() => setSelectedImage(src)}
+            onClick={() => open(src)}
             aria-label={`Open ${tradeLabel} work sample ${index + 1}`}
-            className="group relative aspect-4/3 overflow-hidden rounded-md border border-border bg-card text-left"
+            className="group relative aspect-4/3 cursor-pointer overflow-hidden rounded-md border border-border bg-card text-left"
           >
             <Image
               src={src}
-              alt={`${tradeLabel} work sample ${index + 1}`}
+              alt=""
               fill
               sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 1024px) calc(50vw - 2rem), 460px"
-              loading={index === 0 ? "eager" : "lazy"}
+              loading={index < 3 ? "eager" : "lazy"}
               fetchPriority={index === 0 ? "high" : "auto"}
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
             />
           </button>
         ))}
@@ -56,11 +81,14 @@ export default function WorkImageGrid({
       <dialog
         ref={dialogRef}
         aria-label={`${tradeLabel} work image viewer`}
+        onCancel={(event) => {
+          event.preventDefault();
+          close();
+        }}
         onClose={() => setSelectedImage(null)}
         onClick={(event) => {
-          if (event.target === event.currentTarget) {
-            setSelectedImage(null);
-          }
+          if (event.target instanceof Element && event.target.closest("img, button")) return;
+          close();
         }}
         className="fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none items-center justify-center bg-black/95 p-3 text-white backdrop:bg-black/80 open:flex sm:p-6"
       >
@@ -76,11 +104,10 @@ export default function WorkImageGrid({
               />
             </div>
             <button
-              ref={closeButtonRef}
               type="button"
-              onClick={() => setSelectedImage(null)}
+              onClick={close}
               aria-label="Close image viewer"
-              className="absolute right-0 top-0 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20"
+              className="absolute right-0 top-0 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20"
             >
               <X size={20} />
             </button>

@@ -1,13 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { Flag, Star } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import ProfileFeedbackForm from "./ProfileFeedbackForm";
 
 type FeedbackForm = "review" | "complaint";
-
-const ProfileFeedbackForm = dynamic(() => import("./ProfileFeedbackForm"));
 
 export default function ProfileFeedbackActions({
   craftsmanName,

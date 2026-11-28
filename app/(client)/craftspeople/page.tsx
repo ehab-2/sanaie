@@ -1,8 +1,10 @@
-import { CraftsmenGrid } from "@/components/common/CraftsmenGrid";
+import { CraftsmenGrid } from "@/components/common/client/CraftsmenGrid";
 import PageHeader from "@/components/common/PageHeader";
-import SearchBar from "@/components/common/SearchBar";
+import SearchBar from "@/components/common/client/SearchBar";
 import { craftsmen } from "@/data/craftsmen";
 import { governorate } from "@/data/governorates";
+import { trades } from "@/data/trades";
+import { CraftspeopleLoading } from "@/components/common/client/CraftspeopleLoading";
 import { Suspense } from "react";
 
 type CraftsPeopleSearchParams = Promise<{
@@ -27,12 +29,21 @@ async function CraftsPeopleResults({
   const tradeQuery = tradeParam?.trim().toLowerCase() ?? "";
   const textQuery = queryParam?.trim().toLowerCase() ?? "";
   const governorateSlug =
-    governorateParam && governorateParam !== "all"
-      ? governorateParam
+    governorateParam && governorateParam.trim().toLowerCase() !== "all"
+      ? governorateParam.trim().toLowerCase()
       : "";
   const governorateLabel = governorate.find(
     (item) => item.slug === governorateSlug,
   )?.label;
+  const validTrade =
+    !tradeQuery ||
+    trades.some(
+      (item) =>
+        item.slug === tradeQuery || item.label.toLowerCase() === tradeQuery,
+    );
+  const validGovernorate =
+    !governorateSlug ||
+    governorate.some((item) => item.slug === governorateSlug);
 
   const filteredCraftsmen = craftsmen.filter((craftsman) => {
     const matchesQuery =
@@ -42,12 +53,14 @@ async function CraftsPeopleResults({
       craftsman.trade.toLowerCase().includes(textQuery) ||
       craftsman.about.toLowerCase().includes(textQuery);
     const matchesTrade =
-      !tradeQuery ||
-      craftsman.trade.toLowerCase() === tradeQuery ||
-      craftsman.tradeLabel.toLowerCase() === tradeQuery;
+      validTrade &&
+      (!tradeQuery ||
+        craftsman.trade.toLowerCase() === tradeQuery ||
+        craftsman.tradeLabel.toLowerCase() === tradeQuery);
     const matchesGovernorate =
-      !governorateLabel ||
-      craftsman.governorate.toLowerCase() === governorateLabel.toLowerCase();
+      validGovernorate &&
+      (!governorateLabel ||
+        craftsman.governorate.toLowerCase() === governorateLabel.toLowerCase());
 
     return matchesQuery && matchesTrade && matchesGovernorate;
   });
@@ -63,8 +76,19 @@ async function CraftsPeopleResults({
         />
         <div className="mt-7">
           <SearchBar
-            initialTrade={tradeParam ?? ""}
-            initialGovernorate={governorateSlug || "all"}
+            key={`${tradeQuery}-${governorateSlug}-${textQuery}`}
+            initialTrade={
+              validTrade && tradeQuery
+                ? (trades.find(
+                    (item) =>
+                      item.slug === tradeQuery ||
+                      item.label.toLowerCase() === tradeQuery,
+                  )?.slug ?? "all")
+                : "all"
+            }
+            initialGovernorate={
+              validGovernorate && governorateSlug ? governorateSlug : "all"
+            }
             initialQuery={queryParam ?? ""}
           />
         </div>
@@ -77,19 +101,13 @@ async function CraftsPeopleResults({
   );
 }
 
-function CraftsPeople({ searchParams }: { searchParams: CraftsPeopleSearchParams }) {
+function CraftsPeople({
+  searchParams,
+}: {
+  searchParams: CraftsPeopleSearchParams;
+}) {
   return (
-    <Suspense
-      fallback={
-        <section className="scroll-mt-24">
-          <div className="mx-auto max-w-360 px-5 py-12 md:px-10 md:py-16">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              Loading craftsmen...
-            </p>
-          </div>
-        </section>
-      }
-    >
+    <Suspense fallback={<CraftspeopleLoading />}>
       <CraftsPeopleResults searchParams={searchParams} />
     </Suspense>
   );

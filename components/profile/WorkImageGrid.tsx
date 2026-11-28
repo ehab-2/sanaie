@@ -15,40 +15,23 @@ export default function WorkImageGrid({
 }: WorkImageGridProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const historyPushed = useRef(false);
 
   const open = (src: string) => {
-    if (!historyPushed.current) {
-      window.history.pushState(null, "", window.location.href);
-      historyPushed.current = true;
-    }
     setSelectedImage(src);
   };
 
   const close = useCallback(() => {
-    if (historyPushed.current) {
-      window.history.back();
-    } else {
-      setSelectedImage(null);
-    }
+    setSelectedImage(null);
   }, []);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog || !selectedImage) return;
 
-    const onPopState = () => {
-      historyPushed.current = false;
-      setSelectedImage(null);
-    };
-
     dialog.showModal();
     document.body.style.overflow = "hidden";
-    window.addEventListener("popstate", onPopState);
 
-    // Runs on close AND on unmount/route change/hide
     return () => {
-      window.removeEventListener("popstate", onPopState);
       document.body.style.overflow = "";
       if (dialog.open) dialog.close();
     };

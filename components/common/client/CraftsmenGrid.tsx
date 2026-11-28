@@ -1,12 +1,22 @@
 import { Craftsman } from "@/types/craftsman";
 import { CraftsmanCard } from "./CraftsmanCard";
+import { CraftsmenGridSkeleton } from "./CraftsmenGridSkeleton";
 
 interface CraftsmenGridProps {
   craftsmen: Craftsman[];
   limit?: number;
+  isLoading?: boolean;
 }
 
-export function CraftsmenGrid({ craftsmen, limit }: CraftsmenGridProps) {
+export function CraftsmenGrid({
+  craftsmen,
+  limit,
+  isLoading = false,
+}: CraftsmenGridProps) {
+  if (isLoading) {
+    return <CraftsmenGridSkeleton count={limit ?? 6} />;
+  }
+
   if (!craftsmen || craftsmen.length === 0) {
     return (
       <div className="rounded-md border border-dashed border-border bg-card/60 px-6 py-14 text-center">

@@ -1,13 +1,12 @@
-import React from "react";
 import PageHeader from "../common/PageHeader";
-import SearchBar from "../common/SearchBar";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { CraftsmenGrid } from "../common/CraftsmenGrid";
 import { craftsmen } from "@/data/craftsmen";
+import SearchBar from "../common/client/SearchBar";
+import { CraftsmenGrid } from "../common/client/CraftsmenGrid";
 
 
-function TrustedCraftsmen() {
+function TrustedCraftsmen({ isLoading = false }: { isLoading?: boolean }) {
   return (
     <section className="scroll-mt-24">
       <div className="mx-auto max-w-360 px-5 pt-12 md:px-10 md:pt-16">
@@ -23,7 +22,11 @@ function TrustedCraftsmen() {
       </div>
 
       <div className="mx-auto max-w-360 px-5 py-10 md:px-10 md:py-12">
-        <CraftsmenGrid craftsmen={craftsmen} limit={6}/>
+        <CraftsmenGrid
+          craftsmen={craftsmen}
+          limit={6}
+          isLoading={isLoading}
+        />
         <div className="mt-12 flex justify-center">
           <Link
             href="/craftspeople"

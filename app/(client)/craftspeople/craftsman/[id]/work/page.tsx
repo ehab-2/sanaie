@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { craftsmen } from "@/data/craftsmen";
 import CraftsmanWorkGalleryContent from "@/components/profile/CraftsmanWorkGalleryContent";
+import { LoadingPage } from "@/components/common/LoadingPage";
 
 type CraftsmanWorkPageProps = {
   params: Promise<{ id: string }>;
@@ -41,13 +42,7 @@ async function CraftsmanWorkRoute({ params }: CraftsmanWorkPageProps) {
 
 export default function CraftsmanWorkGallery(props: CraftsmanWorkPageProps) {
   return (
-    <Suspense
-      fallback={
-        <main className="mx-auto w-full max-w-360 flex-1 px-5 py-12 md:px-10">
-          <p className="mono-label">Loading work gallery...</p>
-        </main>
-      }
-    >
+    <Suspense fallback={<LoadingPage message="Loading work gallery..." />}>
       <CraftsmanWorkRoute params={props.params} />
     </Suspense>
   );

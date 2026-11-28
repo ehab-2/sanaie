@@ -5,10 +5,13 @@ import {
   BadgeCheck,
   MapPin,
   MessageCircle,
-  Phone,
   Star,
 } from "lucide-react";
 import type { Craftsman } from "@/types/craftsman";
+import { reviews as allReviews } from "@/data/reviews";
+import ProfileFeedbackActions from "./ProfileFeedbackActions";
+import CraftsmanReviews from "./CraftsmanReviews";
+
 
 export default function CraftsmanProfileContent({
   craftsman,
@@ -16,6 +19,12 @@ export default function CraftsmanProfileContent({
   craftsman: Craftsman;
 }) {
   const workImages = craftsman.selectedWork ?? [];
+  const reviews = allReviews.filter(
+    (review) => review.craftsmanId === craftsman.id,
+  );
+  const averageRating =
+    reviews.reduce((total, review) => total + review.rating, 0) /
+    (reviews.length || 1);
 
   return (
     <main className="mx-auto w-full max-w-360 flex-1 px-5 py-8 md:px-10 md:py-12">
@@ -53,11 +62,21 @@ export default function CraftsmanProfileContent({
             <div className="flex items-center justify-between gap-4 py-4">
               <dt className="mono-label">Rating</dt>
               <dd className="inline-flex items-center gap-1.5 text-sm">
-                <Star size={14} className="text-primary" fill="currentColor" />
-                {craftsman.rating.toFixed(1)}
-                <span className="text-muted-foreground">
-                  ({craftsman.reviewsCount})
-                </span>
+                {reviews.length > 0 ? (
+                  <>
+                    <Star
+                      size={14}
+                      className="text-primary"
+                      fill="currentColor"
+                    />
+                    {averageRating.toFixed(1)}
+                    <span className="text-muted-foreground">
+                      ({reviews.length})
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-muted-foreground">No reviews yet</span>
+                )}
               </dd>
             </div>
           </dl>
@@ -72,13 +91,7 @@ export default function CraftsmanProfileContent({
               <MessageCircle size={15} />
               Message on WhatsApp
             </a>
-            <a
-              href={`tel:${craftsman.phone}`}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-border px-5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors hover:bg-foreground hover:text-background"
-            >
-              <Phone size={15} />
-              Call
-            </a>
+            <ProfileFeedbackActions craftsmanName={craftsman.name} />
           </div>
         </section>
 
@@ -112,6 +125,7 @@ export default function CraftsmanProfileContent({
                         alt={`${craftsman.tradeLabel} work sample ${index + 1}`}
                         fill
                         sizes="(max-width: 640px) 45vw, (max-width: 1024px) 35vw, 25vw"
+                        loading={index === 3 ? "eager" : "lazy"}
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </Link>
@@ -126,10 +140,12 @@ export default function CraftsmanProfileContent({
               </>
             ) : (
               <p className="mt-4 rounded-md border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">
-                No work have been added yet.
+                No work has been added yet.
               </p>
             )}
           </div>
+
+          <CraftsmanReviews reviews={reviews} />
         </section>
       </div>
     </main>

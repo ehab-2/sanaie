@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { craftsmen } from "@/data/craftsmen";
 import CraftsmanProfileContent from "@/components/profile/CraftsmanProfileContent";
+import { LoadingPage } from "@/components/common/LoadingPage";
 
 type CraftsmanPageProps = {
   params: Promise<{ id: string }>;
@@ -41,13 +42,7 @@ async function CraftsmanProfileRoute({ params }: CraftsmanPageProps) {
 
 export default function CraftsmanProfile(props: CraftsmanPageProps) {
   return (
-    <Suspense
-      fallback={
-        <main className="mx-auto w-full max-w-360 flex-1 px-5 py-12 md:px-10">
-          <p className="mono-label">Loading craftsman profile...</p>
-        </main>
-      }
-    >
+    <Suspense fallback={<LoadingPage message="Loading craftsman profile..." />}>
       <CraftsmanProfileRoute params={props.params} />
     </Suspense>
   );

@@ -1,17 +1,12 @@
 "use client";
 
-import { useState,} from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BriefcaseBusiness, MapPin, Search } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+
 import { governorate } from "@/data/governorates";
 import { trades } from "@/data/trades";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface SearchBarProps {
   initialTrade?: string;

@@ -32,7 +32,7 @@ export default function CraftsmanWorkGalleryContent({craftsman,}: {craftsman: Cr
         <WorkImageGrid images={workImages} tradeLabel={craftsman.tradeLabel} />
       ) : (
         <p className="mt-8 rounded-md border border-dashed border-border px-4 py-12 text-center text-sm text-muted-foreground">
-          No work have been added yet.
+          No work has been added yet.
         </p>
       )}
     </main>
